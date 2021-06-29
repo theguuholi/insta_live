@@ -4,7 +4,7 @@
      <ul id="nav-mobile" class="right hide-on-med-and-down">
        <li>
          <a href="sass.html">
-           <%= live_redirect to: Routes.live_path(@socket, InstaLiveWeb.PageLive) do %>
+           <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
            <i class="material-icons">add_circle_outline</i>
            <% end %>
          </a>
