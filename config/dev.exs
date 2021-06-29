@@ -58,7 +58,7 @@ config :insta_live, InstaLiveWeb.Endpoint,
 config :insta_live, InstaLiveWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/static/(?!uploads).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/insta_live_web/(live|views)/.*(ex)$",
       ~r"lib/insta_live_web/templates/.*(eex)$"

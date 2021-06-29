@@ -43,15 +43,52 @@ defmodule InstaLiveWeb.PostLive.New do
   @impl true
   def handle_event("validate", params, socket) do
     IO.inspect("validate")
-    IO.inspect params
+    IO.inspect(params)
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("save", params, socket) do
-    IO.inspect("save")
-    IO.inspect params
+    urls = store_posts_and_get_url(socket)
+    params = Map.put(params, "photos_url", urls)
+
+    case Posts.create_post(params) do
+      {:ok, _post} ->
+        socket = socket
+        |> put_flash(:info, "Post has been created!")
+        |> assign(changeset: Posts.change_post())
+        IO.inspect "sss!!"
+
+        {:noreply, socket}
+
+      {:error, changeset} ->
+        IO.inspect "here!!"
+        IO.inspect changeset
+        socket =
+          socket
+          |> put_flash(:error, "invalid payload")
+          |> assign(changeset: changeset)
+
+        {:noreply, socket}
+    end
+
+    IO.inspect(params)
     {:noreply, socket}
+  end
+
+  defp store_posts_and_get_url(socket) do
+    consume_uploaded_entries(socket, :posts, fn meta, entry ->
+      # IO.inspect meta, label: "meta"
+      # IO.inspect entry, label: "entry"
+      dest = Path.join("priv/static/uploads", filename(entry))
+      File.cp!(meta.path, dest)
+      Routes.static_path(socket, "/uploads/#{filename(entry)}")
+    end)
+  end
+
+  defp filename(entry) do
+    [ext | _] = MIME.extensions(entry.client_type)
+    "#{entry.uuid}.#{ext}"
   end
 
   @impl true
