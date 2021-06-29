@@ -1,0 +1,10 @@
+<div id="posts" phx-update="prepend">
+    <%= for post <- @posts do %>
+        <%= for {photo_url, index} <- Enum.with_index(post.photos_url) do %>
+            <div class="photo" id="<%= post.id %>-<%= index %>">
+                <img src="<%= photo_url %>" alt="post.description">
+                <%= post.description %>
+            </div>
+        <% end %>
+    <% end %>
+</div>

@@ -38,7 +38,11 @@ defmodule InstaLive.Posts do
     Repo.delete(post)
   end
 
-  def change_post(%Post{} = post, attrs \\ %{}) do
+  def change_post(attrs \\ %{}) do
+    change_post(%Post{}, attrs)
+  end
+
+  def change_post(%Post{} = post, attrs) do
     Post.changeset(post, attrs)
   end
 end

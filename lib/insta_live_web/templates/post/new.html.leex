@@ -1,11 +1,38 @@
-  <form action="#">
-    <div class="file-field input-field">
-      <div class="btn">
-        <span>File</span>
-        <input type="file">
-      </div>
-      <div class="file-path-wrapper">
-        <input class="file-path validate" type="text">
-      </div>
+<div class="row">
+  <%= f = form_for @changeset, "#",
+        [class: "col s12",
+        id: "create-post",
+        phx_submit: "save",
+        phx_validate: "validate"] %>
+
+  <div class="row">
+    <div class="input-field col s12">
+      <%= textarea f, :description, class: "materialize-textarea" %>
+      <%= label f, :description %>
     </div>
+  </div>
+
+  <%= inspect @uploads.posts %>
+  <span class="helper-text" data-error="wrong" data-success="right">
+    Add up to <%= @uploads.posts.max_entries %> photos
+    (max <%= trunc(@uploads.posts.max_file_size / 1_000_000) %> MB each)
+  </span>
+
+
+  <div class="file-field input-field">
+    <div class="btn">
+      <span>File</span>
+      <%= live_file_input @uploads.posts %>
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path validate" type="text" placeholder="Upload one or more files">
+    </div>
+  </div>
+
+  <%= for entry <- @uploads.posts.entries do %>
+    <%= live_img_preview entry %>
+  <% end %>
+
+  <%= submit "Upload", phx_disable_with: "Creating a Post..." %>
   </form>
+</div>
