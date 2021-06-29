@@ -41,14 +41,21 @@ defmodule InstaLiveWeb.PostLive.New do
   end
 
   @impl true
-  def handle_event("validate", _, socket) do
+  def handle_event("validate", params, socket) do
     IO.inspect("validate")
+    IO.inspect params
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("save", _, socket) do
+  def handle_event("save", params, socket) do
     IO.inspect("save")
+    IO.inspect params
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("cancel", %{"ref" => ref}, socket) do
+    {:noreply, cancel_upload(socket, :posts, ref)}
   end
 end

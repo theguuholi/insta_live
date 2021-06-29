@@ -1,9 +1,11 @@
 <div class="row">
   <%= f = form_for @changeset, "#",
-        [class: "col s12",
-        id: "create-post",
-        phx_submit: "save",
-        phx_validate: "validate"] %>
+        [
+          class: "col s12",
+          id: "create-post",
+          phx_change: "validate",
+          phx_submit: "save"
+        ] %>
 
   <div class="row">
     <div class="input-field col s12">
@@ -12,7 +14,7 @@
     </div>
   </div>
 
-  <%= inspect @uploads.posts %>
+  <%#= inspect @uploads.posts %>
   <span class="helper-text" data-error="wrong" data-success="right">
     Add up to <%= @uploads.posts.max_entries %> photos
     (max <%= trunc(@uploads.posts.max_file_size / 1_000_000) %> MB each)
@@ -29,10 +31,30 @@
     </div>
   </div>
 
-  <%= for entry <- @uploads.posts.entries do %>
-    <%= live_img_preview entry %>
+  <%= for {_ref, err} <- @uploads.posts.errors do %>
+    <span class="helper-text" data-error="wrong" data-success="right">
+      <%= humanize(err) %>
+    </span>
   <% end %>
 
-  <%= submit "Upload", phx_disable_with: "Creating a Post..." %>
+  <%= for entry <- @uploads.posts.entries do %>
+  <%= live_img_preview entry, width: 500 %>
+  <div class="progress">
+    <div class="determinate" style="width: <%= entry.progress %>%"></div>
+  </div>
+
+
+  <a href="#" phx-click="cancel" phx-value-ref="<%= entry.ref %>">
+    &times;
+  </a>
+    <%= for {_ref, err} <- upload_errors(@uploads.posts, entry) do %>
+    <span class="helper-text" data-error="wrong" data-success="right">
+      <%= humanize(err) %>
+    </span>
+  <% end %>
+
+  <% end %>
+
+  <%= submit "Upload", class: "btn large", phx_disable_with: "Creating a Post..." %>
   </form>
 </div>
