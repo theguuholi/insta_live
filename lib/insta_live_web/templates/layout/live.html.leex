@@ -1,13 +1,18 @@
  <nav>
    <div class="nav-wrapper black">
-     <a href="#" class="brand-logo">InstaLive</a>
+     <%= live_redirect to: Routes.page_path(@socket, :index), class: "brand-logo" do %>
+     InstaLive
+     <% end %>
      <ul id="nav-mobile" class="right hide-on-med-and-down">
        <li>
-         <a href="sass.html">
-           <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
-           <i class="material-icons">add_circle_outline</i>
-           <% end %>
-         </a>
+         <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
+         <i class="material-icons">add_circle_outline</i>
+         <% end %>
+       </li>
+       <li>
+         <%= live_redirect to: Routes.post_index_path(@socket, :index) do %>
+         <i class="material-icons">person</i>
+         <% end %>
        </li>
      </ul>
    </div>

@@ -5,9 +5,11 @@ defmodule InstaLiveWeb.PostLive.Index do
   alias InstaLive.Posts
 
   @impl true
-  def mount(_params, _session, socket) do
-    if connected?(socket), do: Posts.subscribe("user")
-    params = [posts: Posts.list_posts()]
+  def mount(_params, session, socket) do
+    socket = assign_current_user(socket, session)
+    user_id = socket.assigns.current_user.id
+    if connected?(socket), do: Posts.subscribe(user_id)
+    params = [posts: Posts.list_posts(user_id)]
     socket = assign(socket, params)
     {:ok, socket, temporary_assigns: [posts: []]}
   end

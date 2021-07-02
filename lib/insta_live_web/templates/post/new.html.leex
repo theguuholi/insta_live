@@ -14,27 +14,27 @@
     </div>
   </div>
 
-  <%#= inspect @uploads.posts %>
-  <span class="helper-text" data-error="wrong" data-success="right">
-    Add up to <%= @uploads.posts.max_entries %> photos
-    (max <%= trunc(@uploads.posts.max_file_size / 1_000_000) %> MB each)
-  </span>
-
-
-  <div class="file-field input-field">
-    <div class="btn">
-      <span>File</span>
-      <%= live_file_input @uploads.posts %>
-    </div>
-    <div class="file-path-wrapper">
-      <input class="file-path validate" type="text" placeholder="Upload one or more files">
+  <div class="row file-field file-path input-field" phx-drop-target="<%= @uploads.posts.ref %>">
+    <div class="col s12 m6">
+      <div class="card ">
+        <div class="card-content">
+          <span class="card-title">Upload Images or drag and drop here</span>
+          <%#= inspect @uploads.posts %>
+          <p><%= live_file_input @uploads.posts %></p>
+          <span class="helper-text" data-error="wrong" data-success="right">
+            Add up to <%= @uploads.posts.max_entries %> photos
+            (max <%= trunc(@uploads.posts.max_file_size / 1_000_000) %> MB each)
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 
+
   <%= for {_ref, err} <- @uploads.posts.errors do %>
-    <span class="helper-text" data-error="wrong" data-success="right">
-      <%= humanize(err) %>
-    </span>
+  <span class="helper-text" data-error="wrong" data-success="right">
+    <%= humanize(err) %>
+  </span>
   <% end %>
 
   <%= for entry <- @uploads.posts.entries do %>
@@ -47,10 +47,10 @@
   <a href="#" phx-click="cancel" phx-value-ref="<%= entry.ref %>">
     &times;
   </a>
-    <%= for {_ref, err} <- upload_errors(@uploads.posts, entry) do %>
-    <span class="helper-text" data-error="wrong" data-success="right">
-      <%= humanize(err) %>
-    </span>
+  <%= for {_ref, err} <- upload_errors(@uploads.posts, entry) do %>
+  <span class="helper-text" data-error="wrong" data-success="right">
+    <%= humanize(err) %>
+  </span>
   <% end %>
 
   <% end %>

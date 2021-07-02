@@ -1,12 +1,17 @@
-hi
-<%= @posts %>
-<div id="posts" phx-update="prepend">
+<div class="row" id="posts" phx-update="prepend">
     <%= for post <- @posts do %>
-        <%= for {photo_url, index} <- Enum.with_index(post.photos_url) do %>
-            <div class="photo" id="<%= post.id %>-<%= index %>">
-                <img src="<%= photo_url %>" alt="post.description">
-                <%= post.description %>
-            </div>
-        <% end %>
+    <%#= for {photo_url, index} <- Enum.with_index(post.photos_url) do %>
+    <div class="card small col s12 m4" id="<%= post.id %>">
+        <div class="card-image">
+            <img src="<%= hd(post.photos_url) %>" alt="<%= post.description %>" class="responsive-img" >
+        </div>
+        <div class="card-content">
+            <p><%= post.description %></p>
+        </div>
+        <div class="card-action">
+            <a href="#">tags</a>
+        </div>
+    </div>
+    <%# end %>
     <% end %>
 </div>

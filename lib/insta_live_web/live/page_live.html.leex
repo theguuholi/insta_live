@@ -1,0 +1,36 @@
+<div class="row" id="posts-index" phx-update="append">
+    <%= for post <- @posts do %>
+    <%#= for {photo_url, index} <- Enum.with_index(post.photos_url) do %>
+    <div class="card col s12 m8" id="<%= post.id %>">
+        <div class="card-content">
+            <div class="row valign-wrapper">
+                <div class="col s2">
+                    <img src="https://materializecss.com/images/yuna.jpg" alt="" class="circle responsive-img">
+                </div>
+                <div class="col s10">
+                    <span class="black-text">
+                        <%= post.user.email %>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="card-image">
+            <img src="<%= hd(post.photos_url) %>" alt="<%= post.description %>" class="responsive-img">
+        </div>
+        <div class="card-content">
+            <p><%= post.description %></p>
+        </div>
+        <div class="card-content">
+            <p>comments</p>
+        </div>
+        <div class="card-content">
+            <p>tags</p>
+        </div>
+    </div>
+    <%# end %>
+    <% end %>
+</div>
+
+  <div class="progress" id="post-loading" data-page-number="<%= @page %>" phx-hook="ScrollPosts">
+      <div class="indeterminate"></div>
+  </div>

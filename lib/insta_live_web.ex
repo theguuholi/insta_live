@@ -46,7 +46,7 @@ defmodule InstaLiveWeb do
     quote do
       use Phoenix.LiveView,
         layout: {InstaLiveWeb.LayoutView, "live.html"}
-
+      import  InstaLiveWeb.LiveHelpers
       unquote(view_helpers())
     end
   end

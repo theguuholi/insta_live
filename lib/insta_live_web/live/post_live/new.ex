@@ -2,7 +2,6 @@ defmodule InstaLiveWeb.PostLive.New do
   use InstaLiveWeb, :live_view
   alias Phoenix.View
   alias InstaLiveWeb.PostView
-
   alias InstaLive.Posts
 
   # @accept :any
@@ -11,9 +10,10 @@ defmodule InstaLiveWeb.PostLive.New do
   @max_file_size 10_000_000
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
     socket =
       socket
+      |> assign_current_user(session)
       |> load_params()
       |> load_upload_configs()
 
@@ -41,29 +41,26 @@ defmodule InstaLiveWeb.PostLive.New do
   end
 
   @impl true
-  def handle_event("validate", params, socket) do
-    IO.inspect("validate")
-    IO.inspect(params)
-    {:noreply, socket}
+  def handle_event("validate", %{"post" => post}, socket) do
+    changeset =
+      post
+      |> Posts.change_post()
+      |> Map.put(:action, :validate)
+
+    {:noreply, socket |> assign(changeset: changeset)}
   end
 
   @impl true
-  def handle_event("save", params, socket) do
-    urls = store_posts_and_get_url(socket)
-    params = Map.put(params, "photos_url", urls)
-
-    case Posts.create_post(params) do
+  def handle_event("save", %{"post" => post}, socket) do
+    {completed, []} = uploaded_entries(socket, :posts)
+    urls = Enum.map(completed, &Routes.static_path(socket, "/uploads/#{filename(&1)}"))
+    fetch_fields = %{"photos_url" => urls, "user_id" => socket.assigns.current_user.id}
+    params = Map.merge(post, fetch_fields)
+    case Posts.create_post(params, &store_posts(socket, &1)) do
       {:ok, _post} ->
-        socket = socket
-        |> put_flash(:info, "Post has been created!")
-        |> assign(changeset: Posts.change_post())
-        IO.inspect "sss!!"
-
-        {:noreply, socket}
-
+        socket = put_flash(socket, :info, "Post has been created!")
+        {:noreply, push_redirect(socket, to: "/posts")}
       {:error, changeset} ->
-        IO.inspect "here!!"
-        IO.inspect changeset
         socket =
           socket
           |> put_flash(:error, "invalid payload")
@@ -71,19 +68,17 @@ defmodule InstaLiveWeb.PostLive.New do
 
         {:noreply, socket}
     end
-
-    IO.inspect(params)
-    {:noreply, socket}
   end
 
-  defp store_posts_and_get_url(socket) do
+  defp store_posts(socket, post) do
     consume_uploaded_entries(socket, :posts, fn meta, entry ->
       # IO.inspect meta, label: "meta"
       # IO.inspect entry, label: "entry"
       dest = Path.join("priv/static/uploads", filename(entry))
       File.cp!(meta.path, dest)
-      Routes.static_path(socket, "/uploads/#{filename(entry)}")
     end)
+
+    {:ok, post}
   end
 
   defp filename(entry) do

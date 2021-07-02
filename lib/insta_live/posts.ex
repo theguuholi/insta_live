@@ -4,8 +4,17 @@ defmodule InstaLive.Posts do
 
   alias InstaLive.Posts.Post
 
-  def list_posts do
-    Repo.all(Post)
+  def list_posts(page: page, per_page: per_page) do
+    Post
+    |> offset(^((page - 1) * per_page))
+    |> limit(^per_page)
+    |> order_by([{:desc, :inserted_at}])
+    |> preload(:user)
+    |> Repo.all()
+  end
+
+  def list_posts(user_id) do
+    Repo.all(Post, user_id: user_id)
   end
 
   def subscribe(user_id) do
@@ -14,12 +23,19 @@ defmodule InstaLive.Posts do
 
   def get_post!(id), do: Repo.get!(Post, id)
 
-  def create_post(attrs \\ %{}) do
+  def create_post(attrs, fun) do
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
+    |> after_save(fun)
     |> broadcast(:insert_post)
   end
+
+  defp after_save({:ok, post}, fun) do
+    {:ok, _post} = fun.(post)
+  end
+
+  defp after_save(error, _fun), do: error
 
   defp broadcast({:error, _c} = error, _event), do: {:error, error}
 

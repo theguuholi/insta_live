@@ -14,15 +14,57 @@ import "../node_modules/materialize-css/dist/js/materialize";
 //     import socket from "./socket"
 //
 import "phoenix_html"
-import {Socket} from "phoenix"
+import {
+    Socket
+} from "phoenix"
 import topbar from "topbar"
-import {LiveSocket} from "phoenix_live_view"
+import {
+    LiveSocket
+} from "phoenix_live_view"
+
+let Hooks = {};
+Hooks.ScrollPosts = {
+    mounted() {
+        // invocado quando e adicionado no DOM
+        // this.el fala qual e o elemento
+        console.log("mounted", this.el);
+         this.observer = new IntersectionObserver(entries => {
+            console.log(entries)
+            const entry = entries[0];
+            if( entry.isIntersecting){
+                console.log("visible")
+                // chama evento no liveview
+                this.pushEvent("load-posts", {a: 1});
+            }
+        });
+        // notifica qunado o elemento esta na tela
+        this.observer.observe(this.el);
+    },
+    updated(){
+        // e chamado quando elemento e atualizado pelo liveview
+        const pageNumber = this.el.dataset.pageNumber;
+        console.log("updated", pageNumber);
+    },
+    destroyed(){
+        this.observer.disconnect();
+    }
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, {
+    params: {
+        _csrf_token: csrfToken
+    },
+    hooks: Hooks
+})
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({
+    barColors: {
+        0: "#29d"
+    },
+    shadowColor: "rgba(0, 0, 0, .3)"
+})
 window.addEventListener("phx:page-loading-start", info => topbar.show())
 window.addEventListener("phx:page-loading-stop", info => topbar.hide())
 
@@ -34,4 +76,3 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
-
