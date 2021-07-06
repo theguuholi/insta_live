@@ -5,7 +5,23 @@ defmodule InstaLive.Accounts do
 
   import Ecto.Query, warn: false
   alias InstaLive.Repo
-  alias InstaLive.Accounts.{User, UserToken, UserNotifier}
+  alias InstaLive.Accounts.{User, UserToken, UserNotifier, Follow}
+
+  def following?(follower_id, followed_id) do
+    Repo.get_by(Follow, [follower_id: follower_id, followed_id: followed_id])
+  end
+
+  def create_follow(follower, followed) do
+    follow = Ecto.build_assoc(followed, :followers, Ecto.build_assoc(follower, :following))
+    update_following_count = User |> where([u], u.id == ^follower.id)
+    update_followers_count = User |> where([u], u.id == ^followed.id)
+
+    Ecto.Multi.new()
+    |> Ecto.Multi.insert(:follow, follow)
+    |> Ecto.Multi.update_all(:update_following, update_following_count, inc: [following_count: 1])
+    |> Ecto.Multi.update_all(:update_followers, update_followers_count, inc: [followers_count: 1])
+    |> Repo.transaction()
+  end
 
   def list_users() do
     Repo.all(User)

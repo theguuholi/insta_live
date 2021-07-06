@@ -2,6 +2,8 @@ defmodule InstaLive.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias InstaLive.Accounts.Follow
+
   @derive {Inspect, except: [:password]}
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -10,7 +12,11 @@ defmodule InstaLive.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+    field :followers_count, :integer, default: 0
+    field :following_count, :integer, default: 0
 
+    has_many :following, Follow, foreign_key: :follower_id
+    has_many :followers, Follow, foreign_key: :followed_id
     timestamps()
   end
 

@@ -11,17 +11,17 @@
         <% end %>
     </div>
 
-    <div class="col m3 s12" id="user-follows" phx-update="append">
-        <div class="row">
-            <h1>Suggestions For You</h1>
-        </div>
-        <%= for user <- @users do %>
-        <%= live_component @socket,
+    <div class="col m3 s12">
+        <div class="row">Suggestions For You</div>
+        <div id="user-follows" phx-update="append">
+            <%= for user <- @users do %>
+            <%= live_component @socket,
                   InstaLiveWeb.UserLive.FollowComponent,
                   id: user.id,
                   user: user,
                   current_user: @current_user %>
-        <% end %>
+            <% end %>
+        </div>
     </div>
 </div>
 

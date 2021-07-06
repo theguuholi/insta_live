@@ -6,8 +6,11 @@
         <span class="black-text">
             <%= @user.email %>
         </span>
-        <a class="btn-floating right btn-small waves-effect waves-light blue">
-            <i class="material-icons">add</i>
-        </a>
+        <button
+            phx-target="<%= @myself %>"
+            phx-click="toggle-status"
+            class="btn-floating right btn-small waves-effect waves-light <%= @color_btn_follow %>">
+            <i class="material-icons"><%= @btn_follow %></i>
+        </button>
     </div>
 </div>
