@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col m8 s12" id="posts-index" phx-update="append">
+        <%= for post <- @posts do %>
+        <%#= for {photo_url, index} <- Enum.with_index(post.photos_url) do %>
+        <%= live_component @socket,
+            InstaLiveWeb.PageLive.PostFeedComponent,
+            post: post,
+            id: post.id
+        %>
+        <%# end %>
+        <% end %>
+    </div>
+
+    <div class="col m3 s12" id="user-follows" phx-update="append">
+        <div class="row">
+            <h1>Suggestions For You</h1>
+        </div>
+        <%= for user <- @users do %>
+        <%= live_component @socket,
+                  InstaLiveWeb.UserLive.FollowComponent,
+                  id: user.id,
+                  user: user,
+                  current_user: @current_user %>
+        <% end %>
+    </div>
+</div>
+
+
+<div class="progress" id="post-loading" data-page-number="<%= @page %>" phx-hook="ScrollPosts">
+    <div class="indeterminate"></div>
+</div>

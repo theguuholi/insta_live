@@ -31,6 +31,7 @@ defmodule InstaLiveWeb do
     quote do
       use Phoenix.View,
         root: "lib/insta_live_web/templates",
+        pattern: "**/*",
         namespace: InstaLiveWeb
 
       # Import convenience functions from controllers
