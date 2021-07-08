@@ -58,6 +58,11 @@ let liveSocket = new LiveSocket("/live", Socket, {
     hooks: Hooks
 })
 
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.dropdown-trigger');
+    var instances = M.Dropdown.init(elems, {});
+  });
+
 // Show progress bar on live navigation and form submits
 topbar.config({
     barColors: {

@@ -5,20 +5,7 @@
     <% end %>
 
     <%= live_component @socket, InstaLiveWeb.Components.SearchComponent, id: :search_filter, current_user: @current_user  %>
-
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li>
-        <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
-        <i class="material-icons">add_circle_outline</i>
-        <% end %>
-      </li>
-      <li>
-        <%= live_redirect to: Routes.post_index_path(@socket, :index) do %>
-        <i class="material-icons">person</i>
-        <% end %>
-      </li>
       <%= render "_user_menu.html", assigns %>
-    </ul>
   </div>
 </nav>
 

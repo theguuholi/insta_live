@@ -7,10 +7,10 @@ defmodule InstaLiveWeb.PageLive do
   def mount(_params, session, socket) do
     socket =
       socket
+      |> assign_current_user(session)
       |> assign(page: 1, per_page: 2)
       |> load_posts()
       |> load_users()
-      |> assign_current_user(session)
 
     {:ok, socket, temporary_assigns: [posts: []]}
   end
@@ -27,14 +27,14 @@ defmodule InstaLiveWeb.PageLive do
   end
 
   def load_users(socket) do
+    current_user_id = socket.assigns.current_user.id
     assign(socket,
-      users: Accounts.list_users()
+      users: Accounts.list_users(current_user_id)
     )
   end
 
   @impl true
-  def handle_event("load-posts", params, socket) do
-    IO.inspect(params)
+  def handle_event("load-posts", _params, socket) do
     socket = socket |> update(:page, &(&1 + 1)) |> load_posts()
     {:noreply, socket}
   end

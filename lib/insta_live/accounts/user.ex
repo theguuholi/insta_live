@@ -12,9 +12,16 @@ defmodule InstaLive.Accounts.User do
     field :password, :string, virtual: true
     field :hashed_password, :string
     field :confirmed_at, :naive_datetime
+
+    field :username, :string
+    field :full_name, :string
+    field :avatar_url, :string, default: "/images/default-avatar.png"
+    field :bio, :string
+    field :website, :string
+    field :posts_count, :integer, default: 0
+
     field :followers_count, :integer, default: 0
     field :following_count, :integer, default: 0
-
     has_many :following, Follow, foreign_key: :follower_id
     has_many :followers, Follow, foreign_key: :followed_id
     timestamps()
@@ -39,7 +46,7 @@ defmodule InstaLive.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :username, :full_name])
     |> validate_email()
     |> validate_password(opts)
   end

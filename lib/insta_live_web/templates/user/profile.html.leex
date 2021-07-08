@@ -1,0 +1,26 @@
+<div class="row"></div>
+<div class="row">
+    <div class="col s2">
+        <img src="<%= @current_user.avatar_url %>" alt="<%= @current_user.username %>" class="circle responsive-img">
+    </div>
+    <div class="col s10">
+        <div class="row">
+            <strong>
+                <%= @current_user.username %>
+            </strong>
+        </div>
+
+        <div class="row">
+            <%= @current_user.posts_count %> <strong>Posts</strong>
+            <%= @current_user.followers_count %> <strong>Followers</strong>
+            <%= @current_user.following_count %> <strong>Following</strong>
+        </div>
+    </div>
+</div>
+
+<hr>
+<div class="row">
+    <div class="col s2"><a href="#" class="btn text-white black">Posts</a></div>
+    <div class="col s2"><a href="#" class="btn text-white black disabled">IGTV</a></div>
+    <div class="col s2"><a href="#" class="btn text-white black disabled">SAVED</a></div>
+</div>

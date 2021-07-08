@@ -28,6 +28,8 @@ defmodule InstaLive.Accounts do
     Repo.transaction(multi)
   end
 
+  def get_user_by_username(username), do: Repo.get_by!(User, username: username)
+
   def follow_transaction(follow, update_following_count, update_followers_count) do
     Ecto.Multi.new()
     |> Ecto.Multi.insert(:follow, follow)
@@ -42,8 +44,10 @@ defmodule InstaLive.Accounts do
     |> Ecto.Multi.update_all(:update_followers, update_followers_count, inc: [followers_count: -1])
   end
 
-  def list_users() do
-    Repo.all(User)
+  def list_users(current_user_id) do
+    User
+    |> where([u], u.id != ^current_user_id)
+    |> Repo.all()
   end
 
   def list_users(search, current_user_id) do

@@ -48,6 +48,7 @@ defmodule InstaLiveWeb.Router do
   scope "/", InstaLiveWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    live "/:username", UserLive.Profile, :index
     live "/", PageLive, :index
     live "/posts", PostLive.Index, :index
     live "/posts/new", PostLive.New, :index
