@@ -19,7 +19,6 @@ defmodule InstaLiveWeb.Router do
 
   scope "/", InstaLiveWeb do
     pipe_through :browser
-
   end
 
   if Mix.env() in [:dev, :test] do

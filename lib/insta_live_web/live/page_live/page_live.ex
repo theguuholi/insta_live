@@ -28,13 +28,13 @@ defmodule InstaLiveWeb.PageLive do
 
   def load_users(socket) do
     assign(socket,
-      users: Accounts.list_users
+      users: Accounts.list_users()
     )
   end
 
   @impl true
   def handle_event("load-posts", params, socket) do
-    IO.inspect params
+    IO.inspect(params)
     socket = socket |> update(:page, &(&1 + 1)) |> load_posts()
     {:noreply, socket}
   end

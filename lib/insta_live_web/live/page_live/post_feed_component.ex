@@ -4,5 +4,4 @@ defmodule InstaLiveWeb.PageLive.PostFeedComponent do
   def render(assigns) do
     Phoenix.View.render(InstaLiveWeb.PageView, "post_feed.html", assigns)
   end
-
 end

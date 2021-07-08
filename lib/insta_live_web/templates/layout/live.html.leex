@@ -1,29 +1,33 @@
- <nav>
-   <div class="nav-wrapper black">
-     <%= live_redirect to: Routes.page_path(@socket, :index), class: "brand-logo" do %>
-     InstaLive
-     <% end %>
-     <ul id="nav-mobile" class="right hide-on-med-and-down">
-       <li>
-         <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
-         <i class="material-icons">add_circle_outline</i>
-         <% end %>
-       </li>
-       <li>
-         <%= live_redirect to: Routes.post_index_path(@socket, :index) do %>
-         <i class="material-icons">person</i>
-         <% end %>
-       </li>
-     </ul>
-   </div>
- </nav>
+<nav>
+  <div class="nav-wrapper black">
+    <%= live_redirect to: Routes.page_path(@socket, :index), class: "brand-logo" do %>
+    InstaLive
+    <% end %>
 
- <main role="main" class="container">
-   <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
-     <%= live_flash(@flash, :info) %></p>
+    <%= live_component @socket, InstaLiveWeb.Components.SearchComponent, id: :search_filter, current_user: @current_user  %>
 
-   <p class="alert alert-danger" role="alert" phx-click="lv:clear-flash" phx-value-key="error">
-     <%= live_flash(@flash, :error) %></p>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li>
+        <%= live_redirect to: Routes.post_new_path(@socket, :index) do %>
+        <i class="material-icons">add_circle_outline</i>
+        <% end %>
+      </li>
+      <li>
+        <%= live_redirect to: Routes.post_index_path(@socket, :index) do %>
+        <i class="material-icons">person</i>
+        <% end %>
+      </li>
+      <%= render "_user_menu.html", assigns %>
+    </ul>
+  </div>
+</nav>
 
-   <%= @inner_content %>
- </main>
+<main role="main" class="container">
+  <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
+    <%= live_flash(@flash, :info) %></p>
+
+  <p class="alert alert-danger" role="alert" phx-click="lv:clear-flash" phx-value-key="error">
+    <%= live_flash(@flash, :error) %></p>
+
+  <%= @inner_content %>
+</main>
